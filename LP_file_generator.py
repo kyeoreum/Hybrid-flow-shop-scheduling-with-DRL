@@ -100,7 +100,7 @@ for jo in job:
 
                 c.write("Objective Function")
                 c.write("\n")
-                c.write("Minimize Cmax")
+                c.write("Minimize Tmax")
                 c.write("\n")
                 c.write("Subject to")
                 c.write("\n")
@@ -182,11 +182,11 @@ for jo in job:
                         for pp in range(0, len(path[p])):
                                 for k in range(1, alternative_machine+1):
                                     if path[p][pp] == 100:
-                                        c.write("S("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(0)+") + "+ "T("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(0)+") - "  +"C("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(0)+")"+" + "+"999999X("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(0)+") <= 999999 "+str("\n"))
+                                        c.write("S("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(0)+") + "+ "T("+str(i)+","+str(path[p][pp])+","+str(0)+") - "  +"C("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(0)+")"+" + "+"999999X("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(0)+") <= 999999 "+str("\n"))
                                         break
                                     else:
 
-                                        c.write("S("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(k)+") + "+ "T("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(k)+") - "  +"C("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(k)+")"+" + "+"999999X("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(k)+") <= 999999 ")
+                                        c.write("S("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(k)+") + "+ "T("+str(i)+","+str(path[p][pp])+","+str(k)+") - "  +"C("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(k)+")"+" + "+"999999X("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(k)+") <= 999999 ")
                                     c.write("\n")
                         c.write("\n")
                 c.write("\n")
@@ -197,12 +197,12 @@ for jo in job:
                         for pp in range(0, len(path[p])):
                             for k in range(1, alternative_machine+1):
                                 if path[p][pp] == 100:
-                                    c.write("T("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(0)+") = "+str(rework_setup[i-1][0]) + str("\n"))
+                                    c.write("T("+str(i)+","+str(path[p][pp])+","+str(0)+") = "+str(rework_setup[i-1][0]) + str("\n"))
                                     break
                                 elif path[p][pp] > 100:     
-                                    c.write("T("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(k)+") = "+str(job_processing[i-1][path[p][pp]-100-1])+str("\n"))
+                                    c.write("T("+str(i)+","+str(path[p][pp])+","+str(k)+") = "+str(job_processing[i-1][path[p][pp]-100-1])+str("\n"))
                                 else:
-                                    c.write("T("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(k)+") = "+str(job_processing[i-1][path[p][pp]-1])+str("\n"))
+                                    c.write("T("+str(i)+","+str(path[p][pp])+","+str(k)+") = "+str(job_processing[i-1][path[p][pp]-1])+str("\n"))
                                     
                 c.write("\n")
 
@@ -291,7 +291,7 @@ for jo in job:
                                     if k < alternative_machine :
                                         c.write("C("+str(i)+","+"1"+","+str(path[p][pp_r])+","+str(k)+") - ")
                                     elif k == alternative_machine:
-                                        c.write("C("+str(i)+","+"1"+","+str(path[p][pp_r])+","+str(k)+") - Q("+str(i)+","+"1"+","+str(path[p][pp])+","+str(path[p][pp_r])+") <= 0"+str("\n"))
+                                        c.write("C("+str(i)+","+"1"+","+str(path[p][pp_r])+","+str(k)+") - Q("+str(i)+","+str(path[p][pp])+","+str(path[p][pp_r])+") <= 0"+str("\n"))
                     c.write("\n") 
 
 
@@ -302,7 +302,7 @@ for jo in job:
                                 for k in range(1, alternative_machine+1):
                                     
                                     if qtl_1[i-1][1] == path[p][pp_r] and qtl_1[i-1][2] == path[p][pp]:
-                                        c.write("Q("+str(i)+","+"1"+","+str(path[p][pp_r])+","+str(path[p][pp])+") = "+str(qtl_1[i-1][0])+str("\n"))
+                                        c.write("Q("+str(i)+","+str(path[p][pp_r])+","+str(path[p][pp])+") = "+str(qtl_1[i-1][0])+str("\n"))
                 c.write("\n") 
                     
 
@@ -330,11 +330,21 @@ for jo in job:
                                 elif k == alternative_machine:
                                     c.write("C("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(k)+") >= 0"+str("\n"))
                                     
-                c.write("\n")
                 for i in range(1, job_num+1):
-                    c.write("Cmax - C("+str(i)+") + d("+str(i)+") >= 0"+str("\n"))
+                    
+                    c.write("T("+str(i)+") - C("+str(i)+") + d("+str(i)+") >= 0 "+str("\n"))
+                           
                 c.write("\n")
                 c.write("\n")
+
+                c.write("Tmax -")
+                for i in range(1, job_num+1):
+                    if i < job_num:
+                        c.write("T("+str(i)+")-")
+                    else:
+                        c.write("T("+str(i)+") >= 0")
+                c.write("\n")
+
 
 
                 for i in range(1,job_num+1):
