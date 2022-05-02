@@ -96,7 +96,7 @@ for jo in job:
 
 
                 # Mathematical Model
-                c = open("C:/Users/user/Desktop/LP_file/LPfile_"+str(jo)+"_"+str(st)+"_"+str(ma)+"_"+str(num)+".lp", 'w')
+                c = open("C:/Users/user/Desktop/Data/LPfile_"+str(jo)+"_"+str(st)+"_"+str(ma)+"_"+str(num)+".lp", 'w')
 
                 c.write("Objective Function")
                 c.write("\n")
@@ -148,13 +148,6 @@ for jo in job:
                 c.write("\n")
 
 
-                for i in range(1, job_num+1):
-                    for p in range(0, route):
-                        for pp in range(0, 1):
-                                for k in range(1, alternative_machine+1):
-                                    c.write("S("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(k)+") + 9999X("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(k)+") - R("+str(i)+") <= 9999")                    
-                                    c.write("\n")        
-                c.write("\n")
 
 
                 for i in range(1,job_num+1):
@@ -330,6 +323,8 @@ for jo in job:
                                 elif k == alternative_machine:
                                     c.write("C("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(k)+") >= 0"+str("\n"))
                                     
+
+                c.write("\n")
                 for i in range(1, job_num+1):
                     
                     c.write("T("+str(i)+") - C("+str(i)+") + d("+str(i)+") >= 0 "+str("\n"))
@@ -344,7 +339,6 @@ for jo in job:
                     else:
                         c.write("T("+str(i)+") >= 0")
                 c.write("\n")
-
 
 
                 for i in range(1,job_num+1):
