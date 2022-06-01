@@ -96,7 +96,7 @@ for jo in job:
 
 
                 # Mathematical Model
-                c = open("C:/Users/user/Desktop/Data/LPfile_"+str(jo)+"_"+str(st)+"_"+str(ma)+"_"+str(num)+".lp", 'w')
+                c = open("C:/Users/user/Desktop/new_LP/LPfile_"+str(jo)+"_"+str(st)+"_"+str(ma)+"_"+str(num)+".lp", 'w')
 
                 c.write("Objective Function")
                 c.write("\n")
@@ -138,7 +138,7 @@ for jo in job:
                 c.write("\n")
 
 
-                # # 추가추가
+                #Constraint 3
                 for i in range(1, job_num+1):
                     for p in range(0, route):
                         for pp in range(0, 1):
@@ -155,7 +155,7 @@ for jo in job:
                 c.write("\n")
 
 
-                #Constraint 3
+                #Constraint 4
                 for i in range(1, job_num+1):
                     for p in range(0, route):
                         for pp in range(0, len(path[p])):
@@ -169,7 +169,7 @@ for jo in job:
                         c.write("\n")
                 c.write("\n")
 
-                #Constraint 4
+                #Constraint 5
                 for i in range(1, job_num+1):
                     for p in range(0, route):
                         for pp in range(0, len(path[p])):
@@ -201,7 +201,7 @@ for jo in job:
 
 
 
-                #Constraint 5
+                #Constraint 6
                 for i in range(1, job_num+1):
                     for p  in range(0, route):
                         for pp in range(0, len(path[p])):
@@ -222,7 +222,7 @@ for jo in job:
                                 c.write("\n")
                     c.write("\n")                    
                                         
-                #Consraint 6
+                #Consraint 7
                 for i in range(1, job_num+1):
                     for p in range(0, route):
                         for pp in range(0 ,len(path[p])):
@@ -243,7 +243,7 @@ for jo in job:
                                         
                 c.write("\n")
 
-                #Constraint 7
+                #Constraint 8
                 for i in range(1, job_num+1):
                     for p in range(0, route):
                         for pp in range(1 ,len(path[p])):
@@ -269,23 +269,60 @@ for jo in job:
                 c.write("\n")
 
 
-                #Constraint 8
+                #Constraint 9
                 for i in range(1, job_num+1):
                     for p in range(0, 1):
                         for pp in range(1, len(path[p])):
                             for pp_r in range(0, pp):    
-                                for k in range(1, alternative_machine+1):
-                                    if k < alternative_machine:
-                                        c.write("S("+str(i)+","+"1"+","+str(path[p][pp])+","+str(k)+") + ")
-                                    elif k == alternative_machine:
-                                        c.write("S("+str(i)+","+"1"+","+str(path[p][pp])+","+str(k)+") - ")
+                                if (qtl_1[i-1][1] == path[p][pp_r] and qtl_1[i-1][2] == path[p][pp]) or (qtl_2[i-1][1] == path[p][pp_r] and qtl_2[i-1][2] == path[p][pp]):
+                                    for k in range(1, alternative_machine+1):
+                                    
+                                            if k < alternative_machine:
+                                                c.write("S("+str(i)+","+"1"+","+str(path[p][pp])+","+str(k)+") + ")
+                                            elif k == alternative_machine:
+                                                c.write("S("+str(i)+","+"1"+","+str(path[p][pp])+","+str(k)+") - ")
 
-                                for k in range(1, alternative_machine+1):
-                                    if k < alternative_machine :
-                                        c.write("C("+str(i)+","+"1"+","+str(path[p][pp_r])+","+str(k)+") - ")
-                                    elif k == alternative_machine:
-                                        c.write("C("+str(i)+","+"1"+","+str(path[p][pp_r])+","+str(k)+") - Q("+str(i)+","+str(path[p][pp])+","+str(path[p][pp_r])+") <= 0"+str("\n"))
+                                    for k in range(1, alternative_machine+1):
+                
+                                            if k < alternative_machine :
+                                                c.write("C("+str(i)+","+"1"+","+str(path[p][pp_r])+","+str(k)+") - ")
+                                            elif k == alternative_machine:
+                                                c.write("C("+str(i)+","+"1"+","+str(path[p][pp_r])+","+str(k)+") - Q("+str(i)+","+str(path[p][pp_r])+","+str(path[p][pp])+")Z("+ str(i)+ ","+"1"+") <= 0"+str("\n"))
+                                            
+
+                        
                     c.write("\n") 
+
+
+                    
+                #Constraint 10
+                for i in range(1, job_num+1):
+                    for p in range(1, route):
+                        for q in range(0, 1):
+                            for pp in range(1, len(path[p])):
+                                for qq in range(1, len(path[q])):
+                                    for pp_r in range(0, pp):    
+                                        for qq_r in range(0, qq):
+                                            if (qtl_1[i-1][1] == path[q][qq_r] and qtl_1[i-1][2] == path[q][qq]) or (qtl_2[i-1][1] == path[q][qq_r] and qtl_2[i-1][2] == path[q][qq]):
+                                                for k in range(1, alternative_machine+1):
+                                                
+                                                        if k < alternative_machine:
+                                                            c.write("S("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(k)+") + ")
+                                                        elif k == alternative_machine:
+                                                            c.write("S("+str(i)+","+str(p+1)+","+str(path[p][pp])+","+str(k)+") - ")
+
+                                                for k in range(1, alternative_machine+1):
+                                                
+                                                        if k < alternative_machine :
+                                                            c.write("C("+str(i)+","+str(p+1)+","+str(path[p][pp_r])+","+str(k)+") - ")
+                                                        elif k == alternative_machine and (qtl_1[i-1][1] == path[q][qq_r] and qtl_1[i-1][2] == path[q][qq]) or (qtl_2[i-1][1] == path[q][qq_r] and qtl_2[i-1][2] == path[q][qq]):
+                                                            c.write("C("+str(i)+","+str(p+1)+","+str(path[p][pp_r])+","+str(k)+") - Q("+str(i)+","+str(path[q][qq_r])+","+str(path[q][qq])+")Z("+ str(i)+ ","+ str(p+1)+") >= 0"+str("\n"))
+
+                                        
+                        
+                    
+                    c.write("\n")   
+
 
 
                 for i in range(1, job_num+1):
@@ -305,14 +342,14 @@ for jo in job:
                             for pp_r in range(0, pp):    
                                 for k in range(1, alternative_machine+1):
                                     if qtl_2[i-1][1] == path[p][pp_r] and qtl_2[i-1][2] == path[p][pp]:
-                                        c.write("Q("+str(i)+","+"1"+","+str(path[p][pp_r])+","+str(path[p][pp])+") = "+str(qtl_2[i-1][0])+str("\n"))
+                                        c.write("Q("+str(i)+","+str(path[p][pp_r])+","+str(path[p][pp])+") = "+str(qtl_2[i-1][0])+str("\n"))
                                 
 
                 c.write("\n") 
 
 
 
-                #Constraint 9
+                #Constraint Tmax
                 for i in range(1, job_num+1):
                     for p in range(0, route):
                         for pp in range(len(path[p])-1,len(path[p])):
